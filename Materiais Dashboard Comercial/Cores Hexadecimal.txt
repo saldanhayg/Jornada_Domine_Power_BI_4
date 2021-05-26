@@ -1,0 +1,4 @@
+#142538
+
+Verde forte: #0C3F4A
+Verde fraco: #85D0E1

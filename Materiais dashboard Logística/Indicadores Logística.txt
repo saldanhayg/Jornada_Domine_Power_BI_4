@@ -1,0 +1,10 @@
+
+KPIs Logísticos
+
+- Valor dos pedidos
+- Valor do frete
+- % de entregas exatamente na data prevista
+- % de entregas antes da data prevista (antecipadas)
+- % de entregas fora do prazo
+- Tempo médio de atraso
+- Tempo médio de entrega em relação a data do Pedido

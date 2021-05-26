@@ -1,0 +1,27 @@
+let
+    DataMin = List.Min(fDados[Data Criação]),
+    DataMax = List.Max(fDados[Data Encerramento]),
+    AnoMin = Date.Year(DataMin),
+    AnoMax = Date.Year(DataMax),
+    DataInicial = #date(AnoMin, 1, 1),
+    DataFinal = #date(AnoMax, 12, 31),
+    Duracao = Duration.Days(DataFinal - DataInicial) + 1,
+    
+    Fonte = List.Dates(DataInicial, Duracao, #duration(1, 0, 0, 0)),
+    #"Convertido para Tabela" = Table.FromList(Fonte, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+    #"Tipo Alterado" = Table.TransformColumnTypes(#"Convertido para Tabela",{{"Column1", type date}}),
+    #"Colunas Renomeadas" = Table.RenameColumns(#"Tipo Alterado",{{"Column1", "Data"}}),
+    #"Ano Inserido" = Table.AddColumn(#"Colunas Renomeadas", "Ano", each Date.Year([Data]), Int64.Type),
+    #"Mês Inserido" = Table.AddColumn(#"Ano Inserido", "Mês", each Date.Month([Data]), Int64.Type),
+    #"Nome do Mês Inserido" = Table.AddColumn(#"Mês Inserido", "Nome do Mês", each Date.MonthName([Data]), type text),
+    #"Dia Inserido" = Table.AddColumn(#"Nome do Mês Inserido", "Dia", each Date.Day([Data]), Int64.Type),
+    #"Dia da Semana Inserido" = Table.AddColumn(#"Dia Inserido", "Dia da Semana", each Date.DayOfWeek([Data]), Int64.Type),
+    #"Trimestre Inserido" = Table.AddColumn(#"Dia da Semana Inserido", "Trimestre", each Date.QuarterOfYear([Data]), Int64.Type),
+    #"Coluna Personalizada Adicionada" = Table.AddColumn(#"Trimestre Inserido", "Personalizar", each Text.Combine({Text.Start([Nome do Mês], 3), "-", Text.From([Ano], "pt-BR")}), type text),
+    #"Tipo Alterado1" = Table.TransformColumnTypes(#"Coluna Personalizada Adicionada",{{"Personalizar", type text}}),
+    #"Colunas Renomeadas1" = Table.RenameColumns(#"Tipo Alterado1",{{"Personalizar", "Mes-Ano"}}),
+    #"Personalização Adicionada" = Table.AddColumn(#"Colunas Renomeadas1", "Personalizar", each 100 * [Ano] + [Mês]),
+    #"Tipo Alterado2" = Table.TransformColumnTypes(#"Personalização Adicionada",{{"Personalizar", Int64.Type}}),
+    #"Colunas Renomeadas2" = Table.RenameColumns(#"Tipo Alterado2",{{"Personalizar", "Class Mes-Ano"}})
+in
+    #"Colunas Renomeadas2"

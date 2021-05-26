@@ -1,0 +1,70 @@
+% entregas prz exato = 
+var vQtd_entregas_prazo_exato = 
+CALCULATE(
+    [Qtd Pedidos],
+    FILTER(
+       All (fPedidos[tbEntregas.Data entrega] , fPedidos[tbEntregas.Data prevista entrega]),
+        fPedidos[tbEntregas.Data entrega] = fPedidos[tbEntregas.Data prevista entrega]
+    )
+)
+var vResultado =
+DIVIDE(
+	vQtd_entregas_prazo_exato,
+	[Qtd Pedidos]
+)
+return
+vResultado
+
+¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬
+% entregas antecipados =
+var vQtd_entregas_antecipada = 
+CALCULATE(
+    [Qtd Pedidos],
+    FILTER(
+       All (fPedidos[tbEntregas.Data entrega] , fPedidos[tbEntregas.Data prevista entrega]),
+        fPedidos[tbEntregas.Data entrega] < fPedidos[tbEntregas.Data prevista entrega]
+    )
+)
+var vResultado =
+DIVIDE(
+	vQtd_entregas_antecipada,
+	[Qtd Pedidos]
+)
+return
+vResultado
+
+¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬
+% entregas atraso =
+var vQtd_entregas_atraso = 
+CALCULATE(
+    [Qtd Pedidos],
+    FILTER(
+       All (fPedidos[tbEntregas.Data entrega] , fPedidos[tbEntregas.Data prevista entrega]),
+        fPedidos[tbEntregas.Data entrega] > fPedidos[tbEntregas.Data prevista entrega]
+    )
+)
+var vResultado =
+DIVIDE(
+	vQtd_entregas_atraso,
+	[Qtd Pedidos]
+)
+return
+vResultado
+
+
+¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬
+Tempo medio atraso = 
+var vPedidos_entregues_atrado = 
+FILTER(
+        fPedidos,
+        fPedidos[tbEntregas.Data entrega] > fPedidos[tbEntregas.Data prevista entrega]
+)
+var vMedia = 
+AVERAGEX(
+	vPedidos_entregues_atraso,
+	DATEDIFF(fPedidos[tbEntregas.Data prevista entrega], fPedidos[tbEntregas.Data entrega], DAY)
+)
+return
+vMedia
+¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬
+
